@@ -1,28 +1,18 @@
 import React from 'react';
 import './App.css';
-import Registration from './components/Registration';
 import { Provider } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import Login from './components/Login';
 import store from './store';
+import './App.css';
+import Main from './Main';
 
 function App() {
+  //console.log(getAccessTokenFromLocalStorage(), 'Token is---');
   return (
     <Provider store={store}>
       <div className="App">
-        {/* <Registration /> */}
-        <Router>
-          <Route exact path='/' component={Login}/>
-          <Route exact path='/registration' component={Registration}/>
-        </Router>
+        <Main />
       </div>
     </Provider>
   );
 }
-
 export default App;

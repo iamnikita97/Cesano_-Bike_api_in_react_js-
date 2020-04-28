@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import EventIcon from '@material-ui/icons/Event';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Login from './Login';
-import axios from 'axios';
 import { NavLink } from 'react-router-dom/cjs/react-router-dom.min';
+import { connect } from 'react-redux';
+import { REGISTRATION_START, REGISTRATION_REDUX_CLEANUP } from '../actions/action_registration';
+import Alert from '@material-ui/lab/Alert';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        border: '3px solid black',
+        paddingBottom: '19px',
+        paddingTop: '14px',
+        paddingLeft: '26px',
+        paddingRight: '26px',
     },
     avatar: {
         margin: theme.spacing(1),
@@ -36,33 +41,59 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Registration() {
+function Registration(props) {
     const classes = useStyles();
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
         countrycode: '',
-        mobileNumber: '',
+        userMobile: '',
         email: '',
         password: '',
-        allDataRecords: []
     })
 
-    function handleChange(event) {
+    const {
+        dispatchregistrationcleanup,
+        dispatchregistration,
+        isLoading,
+        registerUserData,
+        isRegCompleted,
+        errorMessage,
+        isError,
+        isBtndisabled
+    } = props;
+
+    useEffect((registerUserData) => {
+        console.log("unmount")
+        console.log('Init clean up process');
+        setTimeout(() => {
+            dispatchregistrationcleanup();
+        }, 2050);
+    }, [registerUserData]);
+
+    console.log(isRegCompleted, "Is reg completed?");
+    const handleChange = (event) => {
         setState({
             ...state,
-            [event.target.name]: event.target.value,
-        });
-        console.log(state);
+            [event.target.name]: event.target.value
+        })
     }
 
-    function HandleSubmit(event) {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        alert("successfully");
-        console.log(state);
+        dispatchregistration(state.firstName,
+            state.lastName,
+            state.countrycode,
+            state.userMobile,
+            state.email,
+            state.password);
     }
 
-
+    if (isRegCompleted) {
+        setTimeout(() => {
+            props.history.push('/')
+        }, 2000);
+    }
     return (
         <Container component="main" maxWidth="sm">
             <CssBaseline />
@@ -73,7 +104,7 @@ export default function Registration() {
                 <Typography component="h1" variant="h5">
                     Registration
         </Typography>
-                <form className={classes.form} onSubmit={HandleSubmit}>
+                <form className={classes.form}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -112,10 +143,10 @@ export default function Registration() {
                             <TextField
                                 variant="outlined"
                                 fullWidth
-                                name="mobileNumber"
-                                label="Mobile Number"
-                                id="mobileNumber"
-                                autoComplete="countrycode"
+                                name="userMobile"
+                                label="User Mobile"
+                                id="userMobile"
+                                autoComplete="userMobile"
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -137,10 +168,23 @@ export default function Registration() {
                                 name="password"
                                 label="Password"
                                 id="password"
+                                type="password"
                                 autoComplete="password"
                                 onChange={handleChange}
                             />
+
                         </Grid>
+
+                        {/* isError */}
+                        {errorMessage &&
+                            <Grid item xs={12} sm={12}>
+                                <div className="c-error" >
+                                    <Alert variant="filled" severity={isError ? 'error' : 'success'}>
+                                        {errorMessage}
+                                    </Alert>
+                                </div>
+                            </Grid>
+                        }
                     </Grid>
                     <Button
                         type="submit"
@@ -148,11 +192,11 @@ export default function Registration() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        component={NavLink}
-                        to='/'
+                        onClick={handleSubmit}
+                        disabled={isLoading || isBtndisabled}
                     >
-                        Sign Up
-          </Button>
+                        {isLoading ? 'Please wait...' : 'Sign Up'}
+                    </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
                             <NavLink to='/'>
@@ -165,3 +209,34 @@ export default function Registration() {
         </Container>
     );
 }
+
+//Data coming from reducer
+const mapStateToProps = (state) => ({
+    isLoading: state.registrationUser.isLoading,
+    registerUserData: state.registrationUser.registerUserData,
+    isRegCompleted: state.registrationUser.isRegCompleted,
+    errorMessage: state.registrationUser.errorMessage,
+    isError: state.registrationUser.isError,
+    isBtndisabled: state.registrationUser.isBtndisabled
+})
+
+//Sending data to Reducer
+const mapDispatchToProps = (dispatch) => ({
+
+    dispatchregistration: (first_name, last_name, country_code, user_mobile, email, password) => dispatch({
+        type: REGISTRATION_START,
+        first_name,
+        last_name,
+        country_code,
+        user_mobile,
+        email,
+        password,
+    }),
+
+    dispatchregistrationcleanup: () => dispatch({
+        type: REGISTRATION_REDUX_CLEANUP
+    })
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Registration)

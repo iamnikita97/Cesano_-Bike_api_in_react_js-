@@ -1,10 +1,15 @@
 import { all } from "redux-saga/effects";
 import {
     authenticatesaga,
-} from './user';
+} from './sagas_user';
+import {
+    registrationsaga,
+} from './saga_registration_user';
 
-export default function* rootSaga(){
+
+export default function* rootSaga() {
     yield all([
-        authenticatesaga()
+        authenticatesaga(),
+        registrationsaga()
     ])
 }
