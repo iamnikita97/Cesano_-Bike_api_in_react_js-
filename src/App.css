@@ -31,6 +31,8 @@
 
 .btn-primary {
     color: #fff;
+    margin-top: -7px;
+    margin-right: -34px;
     background-color: #3f51b5;
     border-color: #3f51b5;
 }
@@ -54,3 +56,18 @@
 
 
 /* Preofile User Name End */
+
+
+/* SideBar Heading Start */
+
+.cesano_bike_heading {
+    color: black;
+    transition: initial;
+}
+
+a:hover {
+    color: none;
+}
+
+
+/* SideBar Heading End */

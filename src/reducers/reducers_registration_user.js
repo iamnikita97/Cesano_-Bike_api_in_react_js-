@@ -19,8 +19,7 @@ const registrationUser = (prevState = initState, action) => {
         case REGISTRATION_START: {
             return {
                 ...prevState,
-                isLoading: true,
-                isError: false
+                isLoading: true
             }
         }
 
@@ -52,7 +51,7 @@ const registrationUser = (prevState = initState, action) => {
 
         case REGISTRATION_REDUX_CLEANUP : {
 
-            console.log("Redux Clean Up");
+         console.log("Redux Clean Up");
             return initState
         }
         default: return prevState

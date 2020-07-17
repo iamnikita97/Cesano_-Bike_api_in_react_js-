@@ -12,7 +12,7 @@ import { NavLink, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 import { START_AUTHENTICATE } from '../actions/action_index';
 import { setDataInLocalStorage } from '../api';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/lab/Alert'; 
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 function Login(props) {
     const classes = useStyles();
     const [state, setState] = useState({
-        email: '',
-        password: ''
+        userMobile: '7567608927',
+        password: '123456'
     })
 
     const {
@@ -71,10 +71,10 @@ function Login(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        dispatchauthenticate(state.email, state.password);
+        dispatchauthenticate(state.userMobile, state.password);
         console.log(state);
     }
-  
+
     return (
         access_token
             ?
@@ -99,8 +99,8 @@ function Login(props) {
                                     fullWidth
                                     id="userMobile"
                                     label="User Mobile"
-                                    name="email"
-                                    value={state.email}
+                                    name="userMobile"
+                                    value={state.userMobile}
                                     onChange={handleChange}
                                     autoComplete="userMobile"
                                 />
@@ -124,10 +124,10 @@ function Login(props) {
                         {isError &&
                             <div className="c-error" >
                                 <Alert variant="filled" severity="error">
-                                 {errorMessage}
+                                    {errorMessage}
                                 </Alert>
                             </div>
-                             
+
                         }
                         <Button
                             type="submit"
@@ -164,9 +164,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    dispatchauthenticate: (email, password) => dispatch({
+    dispatchauthenticate: (userMobile, password) => dispatch({
         type: START_AUTHENTICATE,
-        email,
+        userMobile,
         password,
     })
 })

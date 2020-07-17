@@ -71,7 +71,8 @@ function Registration(props) {
         }, 2050);
     }, [registerUserData]);
 
-    console.log(isRegCompleted, "Is reg completed?");
+    //console.log(isRegCompleted, "Is reg completed?");
+    console.log(isError);
     const handleChange = (event) => {
         setState({
             ...state,
@@ -157,6 +158,7 @@ function Registration(props) {
                                 name="email"
                                 label="Email"
                                 id="email"
+                                type="email"
                                 autoComplete="email"
                                 onChange={handleChange}
                             />
